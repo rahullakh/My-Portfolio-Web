@@ -1,0 +1,29 @@
+# Three.js Notes (Hinglish)
+
+- Three.js ek JavaScript library hai jo 3D graphics ko web browser me render karne ke liye use hoti hai.
+
+# Basic Steps (Hinglish me short explanation):
+
+- Scene banao: `const scene = new THREE.Scene();`
+  - (Ek khaali 3D duniya banate hain jisme objects dalenge)
+
+- Camera set karo: `const camera = new THREE.PerspectiveCamera(...)`
+  - (Ye decide karta hai ki scene ko kis angle se dekhenge)
+
+- Renderer banao: `const renderer = new THREE.WebGLRenderer(...)`
+  - (Ye sab kuch browser me dikhata hai)
+
+- Geometry aur Material banao: `const geometry = ...`, `const material = ...`
+  - (Geometry shape batata hai, Material uska look/color)
+
+- Mesh banao aur scene me add karo: `const mesh = new THREE.Mesh(geometry, material); scene.add(mesh);`
+  - (Mesh = Geometry + Material, ye hi actual object hota hai)
+
+- Camera ki position set karo: `camera.position.z = 5;`
+  - (Camera ko thoda door le jaate hain taki object dikh sake)
+
+- Render loop banao: `function animate() { ... requestAnimationFrame(animate); renderer.render(scene, camera); }`
+  - (Ye function bar bar chalega, taki animation ya updates dikh sake)
+
+- Controls ya lights add kar sakte ho (optional)
+  - (Jaise OrbitControls for mouse movement, ya lights for realistic look)
