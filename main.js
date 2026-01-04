@@ -36,7 +36,7 @@ scene.add(light);
 const loader = new SVGLoader();
 let logoGroup; 
 
-loader.load("./assets/Logo/letter-R2.svg", function (data) {
+loader.load("/assets/Logo/letter-R2.svg", (data) => {
 
     const group = new THREE.Group();
 
