@@ -22,26 +22,45 @@ export function initParticles({
   alphaParticles = false,
   disableRotation = false
 }) {
-  const renderer = new Renderer({ alpha: true });
+
+  
+  const isMobile = window.innerWidth < 768;
+
+  
+  const finalParticleCount = isMobile
+    ? Math.floor(particleCount * 0.4)
+    : particleCount;
+
+
+  const renderer = new Renderer({
+    alpha: true,
+    dpr: Math.min(window.devicePixelRatio, isMobile ? 1.2 : 2) 
+  });
+
   const gl = renderer.gl;
   container.appendChild(gl.canvas);
   gl.clearColor(0, 0, 0, 0);
 
+  
   const camera = new Camera(gl, { fov: 15 });
   camera.position.z = 20;
 
+  
   const resize = () => {
     renderer.setSize(container.clientWidth, container.clientHeight);
-    camera.perspective({ aspect: gl.canvas.width / gl.canvas.height });
+    camera.perspective({
+      aspect: gl.canvas.width / gl.canvas.height
+    });
   };
   window.addEventListener("resize", resize);
   resize();
 
-  const positions = new Float32Array(particleCount * 3);
-  const randoms = new Float32Array(particleCount * 4);
-  const colors = new Float32Array(particleCount * 3);
 
-  for (let i = 0; i < particleCount; i++) {
+  const positions = new Float32Array(finalParticleCount * 3);
+  const randoms = new Float32Array(finalParticleCount * 4);
+  const colors = new Float32Array(finalParticleCount * 3);
+
+  for (let i = 0; i < finalParticleCount; i++) {
     positions.set(
       [(Math.random() - 0.5), (Math.random() - 0.5), (Math.random() - 0.5)],
       i * 3
@@ -51,7 +70,9 @@ export function initParticles({
       i * 4
     );
     colors.set(
-      hexToRgb(particleColors[Math.floor(Math.random() * particleColors.length)]),
+      hexToRgb(
+        particleColors[Math.floor(Math.random() * particleColors.length)]
+      ),
       i * 3
     );
   }
@@ -61,6 +82,7 @@ export function initParticles({
     random: { size: 4, data: randoms },
     color: { size: 3, data: colors }
   });
+
 
   const program = new Program(gl, {
     vertex: `
@@ -94,25 +116,31 @@ export function initParticles({
     uniforms: {
       uTime: { value: 0 },
       uSpread: { value: particleSpread },
-      uBaseSize: { value: particleBaseSize }
+      uBaseSize: { value: isMobile ? particleBaseSize * 0.8 : particleBaseSize } 
     },
     transparent: true
   });
 
-  const mesh = new Mesh(gl, { mode: gl.POINTS, geometry, program });
+  const mesh = new Mesh(gl, {
+    mode: gl.POINTS,
+    geometry,
+    program
+  });
+
 
   let time = 0;
-  function animate(t) {
+  function animate() {
     requestAnimationFrame(animate);
     time += speed * 0.01;
     program.uniforms.uTime.value = time;
 
-    if (!disableRotation) {
+    if (!disableRotation && !isMobile) { 
       mesh.rotation.y += 0.001;
       mesh.rotation.x += 0.0005;
     }
 
     renderer.render({ scene: mesh, camera });
   }
+
   animate();
 }
