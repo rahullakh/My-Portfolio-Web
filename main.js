@@ -73,11 +73,11 @@ loader.load("/assets/Logo/letter-R2.svg", (data) => {
         const isMobile = window.innerWidth < 768;
 
         if (isMobile) {
-            group.position.x = 0;       
-            group.position.y = 8;       
+            group.position.x = -10;       
+            group.position.y = 50;       
             group.scale.set(0.12, -0.12, 0.12); 
         } else {
-            group.position.x = 20;     
+            group.position.x = 10;     
             group.position.y = 70;      
             group.scale.set(LOGO_SCALE, -LOGO_SCALE, LOGO_SCALE);
         }
