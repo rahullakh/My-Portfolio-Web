@@ -1,4 +1,5 @@
-const texts = [
+document.addEventListener("DOMContentLoaded", () => {
+ const texts = [
     { id: "nameText", text: "Rahul Lakhera", speed: 80 },
     { id: "roleText", text: "Frontend Developer & UI Engineer", speed: 40 },
     { id: "descText", text: "I build fast, modern, and interactive interfaces.", speed: 25 }
@@ -20,6 +21,9 @@ const texts = [
     setTimeout(() => typeText(item), delay);
     delay += item.text.length * item.speed + 300;
   });
+
+});
+
 
   window.addEventListener("load", () => {
   const cards = document.querySelectorAll(".skill-card");
