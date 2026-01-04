@@ -73,7 +73,7 @@ loader.load("/assets/Logo/letter-R2.svg", (data) => {
         const isMobile = window.innerWidth < 768;
 
         if (isMobile) {
-            group.position.x = -80;       
+            group.position.x = -70;       
             group.position.y = 50;       
             group.scale.set(0.12, -0.12, 0.12); 
         } else {
