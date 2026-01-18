@@ -23,18 +23,22 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(0, 0, 120);
 
+
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.enablePan = false;
-controls.minDistance = 60;
-controls.maxDistance = 200;
+controls.enableRotate = true;     
+controls.enableDamping = true;    
+controls.enablePan = true;        
+
+controls.enableZoom = false; 
+controls.minDistance = camera.position.z;
+controls.maxDistance = camera.position.z;
 
 const light = new THREE.DirectionalLight(0xffffff, 1.2);
 light.position.set(100, 100, 100);
 scene.add(light);
 
 const loader = new SVGLoader();
-let logoGroup; 
+let logoGroup;
 
 loader.load("/assets/Logo/letter-R2.svg", (data) => {
 
@@ -59,52 +63,51 @@ loader.load("/assets/Logo/letter-R2.svg", (data) => {
         });
     });
 
+  
     const LOGO_SCALE = 0.2;
     group.scale.set(LOGO_SCALE, -LOGO_SCALE, LOGO_SCALE);
 
     const box = new THREE.Box3().setFromObject(group);
-    const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
+    group.position.sub(center);
 
-    group.position.sub(center); 
+   const DESKTOP_SCALE = 0.13;
+const MOBILE_SCALE  = 0.1;
 
-    
-    function updateLogoPosition() {
-        const isMobile = window.innerWidth < 768;
+function updateLogoPosition() {
+  const isMobile = window.innerWidth < 768;
 
-        if (isMobile) {
-            group.position.x = -20;       
-            group.position.y = 60;       
-            group.scale.set(0.12, -0.12, 0.12); 
-        } else {
-            group.position.x = 10;     
-            group.position.y = 70;      
-            group.scale.set(LOGO_SCALE, -LOGO_SCALE, LOGO_SCALE);
-        }
-    }
+  if (isMobile) {
+    group.position.set(-20, 60, 0);
+    group.scale.set(MOBILE_SCALE, -MOBILE_SCALE, MOBILE_SCALE);
+  } else {
+    group.position.set(10, 40, 0);
+    group.scale.set(DESKTOP_SCALE, -DESKTOP_SCALE, DESKTOP_SCALE);
+  }
+}
 
-    updateLogoPosition(); 
+
+    updateLogoPosition();
     window.addEventListener("resize", updateLogoPosition);
 
    
+    const size = box.getSize(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z);
     const fov = camera.fov * (Math.PI / 180);
     const cameraZ = Math.abs(maxDim / (2 * Math.tan(fov / 2)));
     camera.position.set(0, 0, cameraZ * 1.8);
 
-    controls.target.set(0, 0, 0);
-    controls.update();
-
     scene.add(group);
-    logoGroup = group; 
+    logoGroup = group;
 });
 
 function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
-    renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
 }
 animate();
+
 
 window.addEventListener("resize", () => {
     const width = canvas.clientWidth;
@@ -112,9 +115,9 @@ window.addEventListener("resize", () => {
 
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
-
     renderer.setSize(width, height, false);
 });
+
 
 initParticles({
     container: document.getElementById("particles-bg"),
