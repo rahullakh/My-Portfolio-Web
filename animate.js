@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
  const texts = [
     { id: "nameText", text: "Rahul Lakhera", speed: 80 },
-    { id: "roleText", text: "Frontend Developer & UI Engineer", speed: 40 },
+    { id: "roleText", text: "Frontend(React.js) Developer & UI Engineer", speed: 40 },
     { id: "descText", text: "I build fast, modern, and interactive interfaces.", speed: 25 }
   ];
 
@@ -24,14 +24,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+const title = document.querySelector(".section-title");
+const skillsSection = document.getElementById("skills");
+const cards = document.querySelectorAll(".skill-card");
 
-  window.addEventListener("load", () => {
-  const cards = document.querySelectorAll(".skill-card");
-  cards.forEach((card, index) => {
+let triggered = false;
+
+window.addEventListener("scroll", () => {
+  if (!skillsSection || !title || triggered) return;
+
+  const sectionTop = skillsSection.getBoundingClientRect().top;
+
+  if (sectionTop < window.innerHeight - 100) {
+    triggered = true;
+
+  
+    title.classList.add("show");
+
     setTimeout(() => {
-      card.classList.add("show");
-    }, index * 150); 
-  });
+      cards.forEach((card, index) => {
+        setTimeout(() => {
+          card.classList.add("show");
+        }, index * 200);
+      });
+    }, 300); 
+  }
 });
-
-
